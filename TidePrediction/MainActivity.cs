@@ -46,8 +46,10 @@ namespace TidePrediction
                 i++;
             }
 
-            ListAdapter = new ArrayAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
-            
+            ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
+
+            ListView.FastScrollEnabled = true;
+
         }
 
         protected override void OnListItemClick(ListView l, View v, int position, long id)
