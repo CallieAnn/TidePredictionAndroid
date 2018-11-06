@@ -56,7 +56,47 @@ namespace TidePrediction
                 int.TryParse(dateSplit[1], out month);
                 int.TryParse(dateSplit[2], out year);
 
-                var key = month.ToString();
+                string key = "";
+                switch (month)
+                {
+                    case 1:
+                        key = "Jan";
+                        break;
+                    case 2:
+                        key = "Feb";
+                        break;
+                    case 3:
+                        key = "Mar";
+                        break;
+                    case 4:
+                        key = "Apr";
+                        break;
+                    case 5:
+                        key = "May";
+                        break;
+                    case 6:
+                        key = "Jun";
+                        break;
+                    case 7:
+                        key = "Jul";
+                        break;
+                    case 8:
+                        key = "Aug";
+                        break;
+                    case 9:
+                        key = "Sep";
+                        break;
+                    case 10:
+                        key = "Oct";
+                        break;
+                    case 11:
+                        key = "Nov";
+                        break;
+                    case 12:
+                        key = "Dec";
+                        break;
+                }
+                
                 if (!alphaIndex.ContainsKey(key))
                 {
                     alphaIndex.Add(key, i);
