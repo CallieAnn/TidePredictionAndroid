@@ -4,6 +4,7 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using System.Collections.Generic;
+using Android.Views;
 
 namespace TidePrediction
 {
@@ -46,15 +47,16 @@ namespace TidePrediction
             }
 
             ListAdapter = new ArrayAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
+            
+        }
 
-            
-
-            
-
-            
-            
-
-            
+        protected override void OnListItemClick(ListView l, View v, int position, long id)
+        {
+            //show the tide height in inches (convert from feet to inches)
+            decimal feet = 0;
+            decimal.TryParse(prediction[position].Height, out feet);
+            var measurement = ((decimal)feet * 12)+" inches".ToString();
+            Android.Widget.Toast.MakeText(this, measurement, Android.Widget.ToastLength.Short).Show();
         }
     }
 }
