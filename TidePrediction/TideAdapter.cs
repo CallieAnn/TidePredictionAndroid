@@ -48,7 +48,7 @@ namespace TidePrediction
             alphaIndex = new Dictionary<string, int>();     // Map sequential numbers
             for (var i = 0; i < items.Length; i++)
             {
-                // Use the part of speech as a key
+                // Use the part of month as a key
                 string[] dateSplit = items[i].Date.Split('/');
                 int year, month, day;
 
@@ -75,7 +75,7 @@ namespace TidePrediction
                         key = "May";
                         break;
                     case 6:
-                        key = "Jun";
+                        key = "Jun ";
                         break;
                     case 7:
                         key = "Jul";
