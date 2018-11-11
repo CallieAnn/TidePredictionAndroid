@@ -5,6 +5,9 @@ using Android.Runtime;
 using Android.Widget;
 using System.Collections.Generic;
 using Android.Views;
+using SQLite;
+using System.Linq;
+using System.IO;
 
 namespace TidePrediction
 {
@@ -25,30 +28,47 @@ namespace TidePrediction
         {
             base.OnCreate(savedInstanceState);
 
-            XmlTideFileParser parser = new XmlTideFileParser(Assets.Open(@"9434032_annual.xml"));
 
-            tideList = parser.TideList;
+            string dbPath = "";
+            SQLiteConnection db = null;
 
-            prediction = new PredictionItem[tideList.Count];
+            // Get the path to the database that was deployed in Assets
+            dbPath = Path.Combine(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "tides.db3");
 
-            int i = 0;
-            foreach(JavaDictionary<string, object> d in tideList)
-            {
-                date = (string)d["date"];
-                day = (string)d["day"];
-                time = (string)d["time"];
-                height = (string)d["pred_in_ft"];
-                hiLow = (string)d["highlow"];
-                singlePrediction = new PredictionItem(date, day, time,
-                    height, hiLow);
+            // It seems you can read a file in Assets, but not write to it
+            // so we'll copy our file to a read/write location
+            using (Stream inStream = Assets.Open("tides.db3"))
+            using (Stream outStream = File.Create(dbPath))
+                inStream.CopyTo(outStream);
 
-                prediction[i] = singlePrediction;
-                i++;
-            }
+            // Open the database
+            db = new SQLiteConnection(dbPath);
 
-            ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
+            //XmlTideFileParser parser = new XmlTideFileParser(Assets.Open(@"9434032_annual.xml"));
 
-            ListView.FastScrollEnabled = true;
+            //tideList = parser.TideList;
+
+            //prediction = new PredictionItem[tideList.Count];
+
+            //int i = 0;
+            //foreach(JavaDictionary<string, object> d in tideList)
+            //{
+            //    date = (string)d["date"];
+            //    day = (string)d["day"];
+            //    time = (string)d["time"];
+            //    height = (string)d["pred_in_ft"];
+            //    hiLow = (string)d["highlow"];
+            //    singlePrediction = new PredictionItem(date, day, time,
+            //        height, hiLow);
+
+            //    prediction[i] = singlePrediction;
+            //    i++;
+            //}
+
+            //ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
+
+            //ListView.FastScrollEnabled = true;
 
         }
 

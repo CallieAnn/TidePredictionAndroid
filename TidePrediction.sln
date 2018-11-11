@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TidePrediction", "TidePrediction\TidePrediction.csproj", "{705D55B3-FEED-4E7F-BB83-D8E0250CE35F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TidePrediction-Console", "TidePrediction-Console\TidePrediction-Console.csproj", "{4AC77DA8-068E-4259-89F2-EE01B193FA95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TidePrediction-Library", "TidePrediction-Library\TidePrediction-Library.csproj", "{026A5675-74A7-4A39-B0FC-9986A5850C28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +21,14 @@ Global
 		{705D55B3-FEED-4E7F-BB83-D8E0250CE35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{705D55B3-FEED-4E7F-BB83-D8E0250CE35F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{705D55B3-FEED-4E7F-BB83-D8E0250CE35F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{4AC77DA8-068E-4259-89F2-EE01B193FA95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AC77DA8-068E-4259-89F2-EE01B193FA95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AC77DA8-068E-4259-89F2-EE01B193FA95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AC77DA8-068E-4259-89F2-EE01B193FA95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{026A5675-74A7-4A39-B0FC-9986A5850C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{026A5675-74A7-4A39-B0FC-9986A5850C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{026A5675-74A7-4A39-B0FC-9986A5850C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{026A5675-74A7-4A39-B0FC-9986A5850C28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
