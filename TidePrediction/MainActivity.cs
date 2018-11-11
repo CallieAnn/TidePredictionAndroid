@@ -45,6 +45,21 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
+            var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
+            var tides = (from t in db.Table<PredictionItem>()
+                          where (t.City == "Reedsport")    
+                          select t).ToList();
+            int count = tides.Count;
+            PredictionItem[] tidesArray = new PredictionItem[count];
+            for (int i = 0; i < count; i++)
+            {
+                tidesArray[i] =
+                    tides[i];
+                    //tides[i].Date + "\t\t" + tides[i].Day + "\n" 
+                    //+ tides[i].Time+ "\t\t" + tides[i].Hi_Low + "\t\t" +  tides[i].Height;
+            }
+
+               // new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, stockInfoArray);
             //XmlTideFileParser parser = new XmlTideFileParser(Assets.Open(@"9434032_annual.xml"));
 
             //tideList = parser.TideList;
@@ -66,9 +81,9 @@ namespace TidePrediction
             //    i++;
             //}
 
-            //ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, prediction );
+            ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray );
 
-            //ListView.FastScrollEnabled = true;
+            ListView.FastScrollEnabled = true;
 
         }
 

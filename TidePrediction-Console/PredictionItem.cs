@@ -13,6 +13,10 @@ namespace TidePrediction_Console
         public string Height { get; set; }
         public string Hi_Low { get; set; }
 
+        public PredictionItem()
+        {
+
+        }
         public PredictionItem(string c, string dt, string d, string t,
             string h, string h_l)
         {
