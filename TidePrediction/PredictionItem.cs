@@ -9,11 +9,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using SQLite;
 
 namespace TidePrediction
 {
     public class PredictionItem
     {
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
         public string City { get; set; }
         public string Date { get; set; }
         public string Day { get; set; }

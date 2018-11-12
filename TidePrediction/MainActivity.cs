@@ -9,12 +9,14 @@ using SQLite;
 using System.Linq;
 using System.IO;
 using Android.Content;
+using System;
 
 namespace TidePrediction
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        DateTime parsedDate;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -38,7 +40,7 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-            //adapter & spinner initialized
+            //spinner initialized
             var locations = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
             var cityName = locations.Select(l => l.City).ToList();
             Spinner spin = FindViewById<Spinner>(Resource.Id.locationSpinner);
@@ -53,6 +55,15 @@ namespace TidePrediction
                 selectedCity = (string)spinner.GetItemAtPosition(e.Position);
             };
 
+            //datepicker initialization
+            var datePicker = FindViewById<DatePicker>(Resource.Id.datePicker);
+            PredictionItem firstItem =
+                db.Get<PredictionItem>((from p in db.Table<PredictionItem>() select p).Min(p => p.ID));
+            string firstDate = firstItem.Date;
+            
+            datePicker.DateTime = StringToDate(firstDate);
+
+
             Button show = FindViewById<Button>(Resource.Id.showButton);
             show.Click += delegate {
                 var back = new Intent(this, typeof(SecondActivity));
@@ -61,6 +72,13 @@ namespace TidePrediction
                 StartActivity(back);
             };
 
+        }
+
+        public DateTime StringToDate(string date)
+        {
+            parsedDate = new DateTime(2000, 1, 1, 12, 32, 30);
+            DateTime.TryParse(date, out parsedDate);
+            return parsedDate;
         }
 
         }

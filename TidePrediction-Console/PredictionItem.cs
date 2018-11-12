@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,8 @@ namespace TidePrediction_Console
 {
     public class PredictionItem
     {
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
         public string City { get; set; }
         public string Date { get; set; }
         public string Day { get; set; }

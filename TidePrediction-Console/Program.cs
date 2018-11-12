@@ -70,7 +70,7 @@ namespace TidePrediction_Console
             }
             //db.Commit();
          
-            Console.WriteLine("{0} finished", c);
+            Console.WriteLine("{0} {1} finished", c, pk);
         }
     }
 }
