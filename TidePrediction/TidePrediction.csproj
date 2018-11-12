@@ -60,6 +60,7 @@
     <Compile Include="PredictionItem.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecondActivity.cs" />
     <Compile Include="TideAdapter.cs" />
     <Compile Include="XmlFileReader.cs" />
   </ItemGroup>

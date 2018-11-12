@@ -29,8 +29,9 @@ namespace TidePrediction_Console
             }
 
             AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/9434032_annual.xml", "Florence");
-            AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/depoebay_annual.xml", "Depoe Bay");
+            
             AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/reedsport_annual.xml", "Reedsport");
+            AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/depoebay_annual.xml", "Depoe Bay");
 
         }
 
@@ -39,6 +40,7 @@ namespace TidePrediction_Console
             XmlTideFileParser parser = new XmlTideFileParser(File.Open(@file, FileMode.Open));
             List<IDictionary<string, object>> tideList = parser.TideList;
 
+            //db.BeginTransaction();
             // Copy into our Database
             int pk = 0;
             string dt;
@@ -66,7 +68,8 @@ namespace TidePrediction_Console
 
                 });
             }
-
+            //db.Commit();
+         
             Console.WriteLine("{0} finished", c);
         }
     }

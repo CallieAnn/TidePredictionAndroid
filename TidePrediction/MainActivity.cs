@@ -12,22 +12,14 @@ using System.IO;
 namespace TidePrediction
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : ListActivity
+    public class MainActivity : AppCompatActivity
     {
-        List<IDictionary<string, object>> tideList;
-        PredictionItem[] prediction;
-        PredictionItem singlePrediction;
-        string date;
-        string day;
-        string time;
-        string height;
-        string hiLow;
-
-
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(savedInstanceState);
+            base.OnCreate(bundle);
 
+            // Set our view from the "main" layout resource
+            SetContentView(Resource.Layout.activity_main);
 
             string dbPath = "";
             SQLiteConnection db = null;
@@ -45,55 +37,16 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-            var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
-            var tides = (from t in db.Table<PredictionItem>()
-                          where (t.City == "Reedsport")    
-                          select t).ToList();
-            int count = tides.Count;
-            PredictionItem[] tidesArray = new PredictionItem[count];
-            for (int i = 0; i < count; i++)
-            {
-                tidesArray[i] =
-                    tides[i];
-                    //tides[i].Date + "\t\t" + tides[i].Day + "\n" 
-                    //+ tides[i].Time+ "\t\t" + tides[i].Hi_Low + "\t\t" +  tides[i].Height;
-            }
+            //set up spinner
+            var locations = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
+            var cityName = locations.Select(l => l.City).ToList();
+            Spinner spin = FindViewById<Spinner>(Resource.Id.locationSpinner);
+            var adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleSpinnerItem, cityName);
 
-               // new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, stockInfoArray);
-            //XmlTideFileParser parser = new XmlTideFileParser(Assets.Open(@"9434032_annual.xml"));
+            spin.Adapter = adapter;
 
-            //tideList = parser.TideList;
-
-            //prediction = new PredictionItem[tideList.Count];
-
-            //int i = 0;
-            //foreach(JavaDictionary<string, object> d in tideList)
-            //{
-            //    date = (string)d["date"];
-            //    day = (string)d["day"];
-            //    time = (string)d["time"];
-            //    height = (string)d["pred_in_ft"];
-            //    hiLow = (string)d["highlow"];
-            //    singlePrediction = new PredictionItem(date, day, time,
-            //        height, hiLow);
-
-            //    prediction[i] = singlePrediction;
-            //    i++;
-            //}
-
-            ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray );
-
-            ListView.FastScrollEnabled = true;
 
         }
 
-        protected override void OnListItemClick(ListView l, View v, int position, long id)
-        {
-            //show the tide height in inches (convert from feet to inches)
-            decimal feet = 0;
-            decimal.TryParse(prediction[position].Height, out feet);
-            var measurement = ((decimal)feet * 12)+" inches".ToString();
-            Android.Widget.Toast.MakeText(this, measurement, Android.Widget.ToastLength.Short).Show();
         }
     }
-}
