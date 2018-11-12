@@ -11,7 +11,7 @@ using System.IO;
 
 namespace TidePrediction
 {
-
+    [Activity(Label = "Second", ParentActivity = typeof(MainActivity))]
     public class SecondActivity : ListActivity
     {
         PredictionItem[] tidesArray;
@@ -20,6 +20,7 @@ namespace TidePrediction
         {
             base.OnCreate(savedInstanceState);
 
+            string city = Intent.Extras.GetString("City");
 
             string dbPath = "";
             SQLiteConnection db = null;
@@ -39,7 +40,7 @@ namespace TidePrediction
 
             var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
             var tides = (from t in db.Table<PredictionItem>()
-                         where (t.City == "Depoe Bay")
+                         where (t.City == city)
                          select t).ToList();
             int count = tides.Count;
             tidesArray = new PredictionItem[count];

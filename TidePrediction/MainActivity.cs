@@ -8,6 +8,7 @@ using Android.Views;
 using SQLite;
 using System.Linq;
 using System.IO;
+using Android.Content;
 
 namespace TidePrediction
 {
@@ -37,7 +38,7 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-            //set up spinner
+            //adapter & spinner initialized
             var locations = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
             var cityName = locations.Select(l => l.City).ToList();
             Spinner spin = FindViewById<Spinner>(Resource.Id.locationSpinner);
@@ -45,6 +46,20 @@ namespace TidePrediction
 
             spin.Adapter = adapter;
 
+            //event handler for spinner selection
+            string selectedCity = "";
+            spin.ItemSelected += delegate (object sender, AdapterView.ItemSelectedEventArgs e) {
+                Spinner spinner = (Spinner)sender;
+                selectedCity = (string)spinner.GetItemAtPosition(e.Position);
+            };
+
+            Button show = FindViewById<Button>(Resource.Id.showButton);
+            show.Click += delegate {
+                var back = new Intent(this, typeof(SecondActivity));
+  
+                back.PutExtra("City", selectedCity);
+                StartActivity(back);
+            };
 
         }
 

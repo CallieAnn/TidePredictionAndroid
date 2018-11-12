@@ -16,4 +16,18 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@id/promptTextView"
 		android:id="@+id/locationSpinner" />
+	<DatePicker
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/locationSpinner"
+		android:id="@+id/datePicker"/>
+	<Button
+		android:text="Show Tide Data"
+		android:layout_below="@id/datePicker"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:id="@+id/showButton" />
+
 </RelativeLayout>
