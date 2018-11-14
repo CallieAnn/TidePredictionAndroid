@@ -21,6 +21,7 @@ namespace TidePrediction
             base.OnCreate(savedInstanceState);
 
             string city = Intent.Extras.GetString("City");
+            string date = Intent.Extras.GetString("Date");
 
             string dbPath = "";
             SQLiteConnection db = null;
@@ -38,17 +39,18 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-            var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
+            //var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
             var tides = (from t in db.Table<PredictionItem>()
                          where (t.City == city)
+                         && (t.Date == date)
                          select t).ToList();
             int count = tides.Count;
             tidesArray = new PredictionItem[count];
-            string time;
+            //string time;
 
             for (int i = 0; i < count; i++)
             {
-                time = tides[i].Time;
+                //time = tides[i].Time;
                 tidesArray[i] =
                     tides[i];
             }

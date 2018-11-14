@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using Android.Content;
 using System;
+using System.Globalization;
 
 namespace TidePrediction
 {
@@ -60,15 +61,21 @@ namespace TidePrediction
             PredictionItem firstItem =
                 db.Get<PredictionItem>((from p in db.Table<PredictionItem>() select p).Min(p => p.ID));
             string firstDate = firstItem.Date;
-            
+
             datePicker.DateTime = StringToDate(firstDate);
+           
 
 
             Button show = FindViewById<Button>(Resource.Id.showButton);
             show.Click += delegate {
                 var back = new Intent(this, typeof(SecondActivity));
-  
+                
+                //get the date in a string format that matches the database
+                CultureInfo culture = new CultureInfo("ja-JP");
+                string selectedDate = datePicker.DateTime.ToString("d", culture);
+
                 back.PutExtra("City", selectedCity);
+                back.PutExtra("Date", selectedDate);
                 StartActivity(back);
             };
 
