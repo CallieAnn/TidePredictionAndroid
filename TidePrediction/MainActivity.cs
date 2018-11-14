@@ -73,9 +73,10 @@ namespace TidePrediction
                 //get the date in a string format that matches the database
                 CultureInfo culture = new CultureInfo("ja-JP");
                 string selectedDate = datePicker.DateTime.ToString("d", culture);
+                string chosenDate = datePicker.DateTime.ToString("yyyy/MM/dd");
 
                 back.PutExtra("City", selectedCity);
-                back.PutExtra("Date", selectedDate);
+                back.PutExtra("Date", chosenDate);
                 StartActivity(back);
             };
 

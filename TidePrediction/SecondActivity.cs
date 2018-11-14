@@ -20,6 +20,7 @@ namespace TidePrediction
         {
             base.OnCreate(savedInstanceState);
 
+            //get selected city and date from main activity
             string city = Intent.Extras.GetString("City");
             string date = Intent.Extras.GetString("Date");
 
@@ -30,8 +31,7 @@ namespace TidePrediction
             dbPath = Path.Combine(
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "tides.db3");
 
-            // It seems you can read a file in Assets, but not write to it
-            // so we'll copy our file to a read/write location
+            // copy file to a read/write location
             using (Stream inStream = Assets.Open("tides.db3"))
             using (Stream outStream = File.Create(dbPath))
                 inStream.CopyTo(outStream);
@@ -39,18 +39,15 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-            //var tidePredictions = db.Table<PredictionItem>().GroupBy(p => p.City).Select(p => p.First());
             var tides = (from t in db.Table<PredictionItem>()
                          where (t.City == city)
                          && (t.Date == date)
                          select t).ToList();
             int count = tides.Count;
             tidesArray = new PredictionItem[count];
-            //string time;
 
             for (int i = 0; i < count; i++)
             {
-                //time = tides[i].Time;
                 tidesArray[i] =
                     tides[i];
             }
