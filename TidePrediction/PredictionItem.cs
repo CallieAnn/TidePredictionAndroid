@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -42,7 +43,17 @@ namespace TidePrediction
 
         public override string ToString()
         {
-            return Day + " " + Date + "\n" + Time + " " + Hi_Low;
+            return Day + " " + Date + "\n" + ConvertTime(Time) + " " + Hi_Low;
         }
+
+        //Convert to 24 hour time
+        public string ConvertTime(string time)
+        {
+            var date = DateTime.ParseExact(time, "h:mm tt",
+            CultureInfo.InvariantCulture).ToString("HH:mm");
+
+            return date;
+        }
+
     }
 }
