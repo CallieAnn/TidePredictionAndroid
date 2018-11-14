@@ -11,6 +11,8 @@ using System.IO;
 using Android.Content;
 using System;
 using System.Globalization;
+using TidePrediction_Library;
+
 
 namespace TidePrediction
 {
@@ -18,6 +20,7 @@ namespace TidePrediction
     public class MainActivity : AppCompatActivity
     {
         DateTime parsedDate;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);

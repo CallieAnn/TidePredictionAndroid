@@ -8,6 +8,8 @@ using Android.Views;
 using SQLite;
 using System.Linq;
 using System.IO;
+using TidePrediction_Library;
+
 
 namespace TidePrediction
 {

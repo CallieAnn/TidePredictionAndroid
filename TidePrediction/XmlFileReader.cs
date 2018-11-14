@@ -63,14 +63,14 @@ namespace TidePrediction
                                 }
                                 break;
                             case HEIGHT:
-                                // Add tide height in inches
+                                // Add tide height
                                 if (reader.Read() && prediction != null)
                                 {
                                     prediction.Add(HEIGHT, reader.Value.Trim());
                                 }
                                 break;
                             case HI_LOW:
-                                // Add H or L for high or low tied
+                                // Add H or L for high or low tide
                                 if (reader.Read() && prediction != null)
                                 {
                                     prediction.Add(HI_LOW, reader.Value.Trim());

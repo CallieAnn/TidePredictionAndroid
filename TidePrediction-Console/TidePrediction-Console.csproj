@@ -20,4 +20,8 @@
     <Folder Include="NewFolder\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\TidePrediction-Library.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,10 +1,8 @@
 ﻿using SQLite;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
-namespace TidePrediction_Console
+namespace TidePrediction_Library
 {
     public class PredictionItem
     {

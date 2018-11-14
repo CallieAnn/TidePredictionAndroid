@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using TidePrediction_Library;
 
 namespace TidePrediction
 {
