@@ -20,6 +20,8 @@ namespace TidePrediction
     public class MainActivity : AppCompatActivity
     {
         DateTime parsedDate;
+        const string CITY = "City";
+        const string DATE = "Date";
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -76,8 +78,8 @@ namespace TidePrediction
                 //get the date in a string format that matches the database
                 string chosenDate = datePicker.DateTime.ToString("yyyy/MM/dd");
 
-                back.PutExtra("City", selectedCity);
-                back.PutExtra("Date", chosenDate);
+                back.PutExtra(CITY, selectedCity);
+                back.PutExtra(DATE, chosenDate);
                 StartActivity(back);
             };
 

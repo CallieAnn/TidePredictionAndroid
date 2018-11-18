@@ -71,6 +71,7 @@ namespace TidePrediction_Console
             }
             //db.Commit();
          
+            //check how many rows finished for each location
             Console.WriteLine("{0} {1} finished", c, pk);
         }
     }

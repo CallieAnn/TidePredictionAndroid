@@ -17,14 +17,16 @@ namespace TidePrediction
     public class SecondActivity : ListActivity
     {
         PredictionItem[] tidesArray;
+        const string CITY = "City";
+        const string DATE = "Date";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             //get selected city and date from main activity
-            string city = Intent.Extras.GetString("City");
-            string date = Intent.Extras.GetString("Date");
+            string city = Intent.Extras.GetString(CITY);
+            string date = Intent.Extras.GetString(DATE);
 
             string dbPath = "";
             SQLiteConnection db = null;
@@ -48,6 +50,7 @@ namespace TidePrediction
             int count = tides.Count;
             tidesArray = new PredictionItem[count];
 
+            //put tides from database into array for ListAdapter to use
             for (int i = 0; i < count; i++)
             {
                 tidesArray[i] =
