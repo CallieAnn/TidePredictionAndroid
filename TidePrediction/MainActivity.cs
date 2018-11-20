@@ -22,6 +22,9 @@ namespace TidePrediction
         DateTime parsedDate;
         const string CITY = "City";
         const string DATE = "Date";
+        const string TODAY = "isToday";
+
+        Boolean isToday = false; //Set to true when user selects showTodayButton for today's closest tides
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -81,6 +84,18 @@ namespace TidePrediction
                 back.PutExtra(CITY, selectedCity);
                 back.PutExtra(DATE, chosenDate);
                 StartActivity(back);
+            };
+
+            Button showToday = FindViewById<Button>(Resource.Id.showTodayButton);
+            showToday.Click += delegate
+            {
+                var back = new Intent(this, typeof(SecondActivity));
+
+                isToday = true;
+
+                back.PutExtra(TODAY, isToday);
+                StartActivity(back);
+
             };
 
         }

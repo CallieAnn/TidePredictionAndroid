@@ -24,10 +24,19 @@
 	<Button
 		android:text="Show Tide Data"
 		android:layout_below="@id/datePicker"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:id="@+id/showButton" />
+	<Button
+		android:text="Show Today's Closest Tides"
+		android:layout_below="@id/datePicker"
+		android:layout_toRightOf="@id/showButton"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:id="@+id/showTodayButton" />
 
 </RelativeLayout>

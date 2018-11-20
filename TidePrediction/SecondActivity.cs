@@ -9,7 +9,7 @@ using SQLite;
 using System.Linq;
 using System.IO;
 using TidePrediction_Library;
-
+using System;
 
 namespace TidePrediction
 {
@@ -19,12 +19,14 @@ namespace TidePrediction
         PredictionItem[] tidesArray;
         const string CITY = "City";
         const string DATE = "Date";
+        const string TODAY = "isToday";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             //get selected city and date from main activity
+            Boolean today = Intent.Extras.GetBoolean(TODAY);
             string city = Intent.Extras.GetString(CITY);
             string date = Intent.Extras.GetString(DATE);
 
@@ -42,6 +44,8 @@ namespace TidePrediction
 
             // Open the database
             db = new SQLiteConnection(dbPath);
+
+
 
             var tides = (from t in db.Table<PredictionItem>()
                          where (t.City == city)
