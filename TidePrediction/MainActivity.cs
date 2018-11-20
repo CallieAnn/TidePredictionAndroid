@@ -24,7 +24,7 @@ namespace TidePrediction
         const string DATE = "Date";
         const string TODAY = "isToday";
 
-        Boolean isToday = false; //Set to true when user selects showTodayButton for today's closest tides
+        bool isToday = false; //Set to true when user selects showTodayButton for today's closest tides
 
         protected override void OnCreate(Bundle bundle)
         {

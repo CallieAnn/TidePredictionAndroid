@@ -10,6 +10,12 @@ using System.Linq;
 using System.IO;
 using TidePrediction_Library;
 using System;
+using Android.Gms.Common;
+using Android.Gms.Location;
+using Android.Gms.Common.Apis;
+using Android.Locations;
+using Android.Util;
+using System.Threading.Tasks;
 
 namespace TidePrediction
 {
@@ -20,6 +26,9 @@ namespace TidePrediction
         const string CITY = "City";
         const string DATE = "Date";
         const string TODAY = "isToday";
+        //GoogleApiClient googleApiClient;
+        FusedLocationProviderClient fusedLocationProviderClient;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,7 +54,19 @@ namespace TidePrediction
             // Open the database
             db = new SQLiteConnection(dbPath);
 
-
+            if(today == true)
+            {
+                fusedLocationProviderClient = LocationServices.GetFusedLocationProviderClient(this);
+                if (IsGoogleServicesInstalled() == true)
+                {
+                    LocationRequest locationRequest = new LocationRequest()
+                                  .SetPriority(100)
+                                  .SetInterval(1000)
+                                  .SetFastestInterval(500);
+                    //GetLocation(locationRequest, ) MAKE INTERFACE to implement LocationCallback
+                    
+                }
+            }
 
             var tides = (from t in db.Table<PredictionItem>()
                          where (t.City == city)
@@ -75,5 +96,33 @@ namespace TidePrediction
             var measurement = ((decimal)feet * 12) + " inches".ToString();
             Android.Widget.Toast.MakeText(this, measurement, Android.Widget.ToastLength.Short).Show();
         }
+
+        public bool IsGoogleServicesInstalled()
+        {
+            var queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
+
+            if (queryResult == ConnectionResult.Success)
+            {
+                Log.Info("SecondActivity", "Google Play Services is installed on this device.");
+                return true;
+            }
+
+            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
+            {
+                // Check if there is a way the user can resolve the issue
+                var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
+                Log.Error("MainActivity", "There is a problem with Google Play Services on this device: {0} - {1}",
+                          queryResult, errorString);
+
+                // Alternately, display the error to the user.
+            }
+
+            return false;
+        }
+
+        //public async Task GetLocation(locReq, locCallBack)
+        //{
+            //await fusedLocationProviderClient.RequestLocationUpdatesAsync(locationRequest, locationCallback);
+       // }
     }
 }
