@@ -63,8 +63,9 @@ namespace TidePrediction
                                   .SetPriority(100)
                                   .SetInterval(1000)
                                   .SetFastestInterval(500);
+                    GetLastLocationFromDevice();
                     //GetLocation(locationRequest, ) MAKE INTERFACE to implement LocationCallback
-                    
+
                 }
             }
 
@@ -120,9 +121,25 @@ namespace TidePrediction
             return false;
         }
 
+        public async Task GetLastLocationFromDevice()
+        {
+            // This method assumes that the necessary run-time permission checks have succeeded.
+            Android.Locations.Location location = await fusedLocationProviderClient.GetLastLocationAsync();
+
+            if (location == null)
+            {
+                // Seldom happens, but should code that handles this scenario
+            }
+            else
+            {
+                // Do something with the location 
+                Log.Debug("Sample", "The latitude is " + location.Latitude);
+            }
+        }
+
         //public async Task GetLocation(locReq, locCallBack)
         //{
-            //await fusedLocationProviderClient.RequestLocationUpdatesAsync(locationRequest, locationCallback);
-       // }
+        //await fusedLocationProviderClient.RequestLocationUpdatesAsync(locationRequest, locationCallback);
+        // }
     }
 }
