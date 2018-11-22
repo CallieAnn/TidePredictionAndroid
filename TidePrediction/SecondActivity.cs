@@ -15,13 +15,16 @@ using Android.Gms.Location;
 using Android.Gms.Common.Apis;
 using Android.Util;
 using System.Threading.Tasks;
-using Android.Locations;
+using Android.Support.V4.Content;
+using Android;
+using Android.Support.V4.App;
+using Android.Support.Design.Widget;
 
 namespace TidePrediction
 {
     [Activity(Label = "Second", ParentActivity = typeof(MainActivity))]
     public class SecondActivity : ListActivity, GoogleApiClient.IConnectionCallbacks,
-        GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
+        GoogleApiClient.IOnConnectionFailedListener, ILocationListener
 
     {
         PredictionItem[] tidesArray;
@@ -29,6 +32,7 @@ namespace TidePrediction
         const string DATE = "Date";
         const string TODAY = "isToday";
         GoogleApiClient googleApiClient;
+        const int REQUEST_CODE = 0; //request code for location permission
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -100,7 +104,27 @@ namespace TidePrediction
 
         public void OnConnected(Bundle connectionHint)
         {
-                Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
+            var locRequest = new LocationRequest();
+
+            // Setting location priority to PRIORITY_HIGH_ACCURACY (100)
+            locRequest.SetPriority(100);
+
+            // Setting interval between updates, in milliseconds
+            // NOTE: the default FastestInterval is 1 minute. If you want to receive location updates more than 
+            // once a minute, you _must_ also change the FastestInterval to be less than or equal to your Interval
+            locRequest.SetFastestInterval(500);
+            locRequest.SetInterval(1000);
+
+            // if (PackageManager.CheckPermission("android.permission.ACCESS_FINE_LOCATION", "TidePrediction.TidePrediction").Equals(-1))
+            if(ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) != Android.Content.PM.Permission.Granted)
+            {
+                // Permission is not granted
+                RequestLocationPermission();
+
+
+            }
+            LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
+            Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
                 Log.Info("LastLocation", location.ToString());
         }
 
@@ -116,9 +140,25 @@ namespace TidePrediction
             Android.Widget.Toast.MakeText(this, "Connection Failed", Android.Widget.ToastLength.Short).Show();
         }
 
-        public void OnLocationChanged(Location location)
+        public void OnLocationChanged(Android.Locations.Location location)
         {
-            throw new NotImplementedException();
+            Log.Info("Location has changed", location.ToString());
         }
+
+        void RequestLocationPermission()
+        {
+            //if (ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation))
+            //{
+            //    Snackbar.Make(ListView, Resource.String.permission_location_rationale,
+            //        Snackbar.LengthIndefinite).SetAction(Resource.String.ok, new Action<View>(delegate (View obj) {
+            //            ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.Camera }, REQUEST_CODE);
+            //        })).Show();
+            //}
+            //else
+            {
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_CODE);
+            }
+        }
+
     }
 }
