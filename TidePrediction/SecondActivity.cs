@@ -32,6 +32,8 @@ namespace TidePrediction
         const string DATE = "Date";
         const string TODAY = "isToday";
         GoogleApiClient googleApiClient;
+        GoogleApiAvailability googleApiAvailability;
+
         const int REQUEST_CODE = 0; //request code for location permission
 
 
@@ -61,6 +63,7 @@ namespace TidePrediction
 
             if (today == true)
             {
+           
                 googleApiClient = new GoogleApiClient.Builder(this, this, this)
                     .AddApi(LocationServices.API).Build();
 
@@ -120,12 +123,18 @@ namespace TidePrediction
             {
                 // Permission is not granted
                 RequestLocationPermission();
-
-
             }
-            LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
+
+            GetLocation(locRequest);
+        }
+
+        async void GetLocation(LocationRequest locRequest)
+        {
+            await LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
             Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
-                Log.Info("LastLocation", location.ToString());
+            Log.Info("LastLocation", location.ToString());
+
+
         }
 
         public void OnConnectionSuspended(int cause)
@@ -138,6 +147,20 @@ namespace TidePrediction
             var r = result.HasResolution;
             Log.Debug("Has Resolution", r.ToString());
             Android.Widget.Toast.MakeText(this, "Connection Failed", Android.Widget.ToastLength.Short).Show();
+            CheckGoogleServicesUserFixable(result);
+           
+        }
+
+        public void CheckGoogleServicesUserFixable(ConnectionResult result)
+        {
+            googleApiAvailability = GoogleApiAvailability.Instance;
+            int servicesAvailableError = googleApiAvailability.IsGooglePlayServicesAvailable(this);
+            bool fixable = googleApiAvailability.IsUserResolvableError(servicesAvailableError);
+
+            if (fixable)
+            {
+                googleApiAvailability.GetErrorDialog(this, result.ErrorCode, REQUEST_CODE).Show();
+            }
         }
 
         public void OnLocationChanged(Android.Locations.Location location)
@@ -159,6 +182,7 @@ namespace TidePrediction
                 ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_CODE);
             }
         }
+
 
     }
 }
