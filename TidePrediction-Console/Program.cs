@@ -95,6 +95,10 @@ namespace TidePrediction_Console
 
             foreach (IDictionary<string, object> prediction in tideList)
             {
+                if (tideList.IndexOf(prediction) >= 100)
+                {
+                    continue;
+                }
                 dt = (string)prediction["date"];
                 d = (string)prediction["day"];
                 t = (string)prediction["time"];

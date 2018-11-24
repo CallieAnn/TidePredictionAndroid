@@ -175,6 +175,26 @@ namespace TidePrediction
                 Log.Info("LastLocation", location.ToString());
                 CalculateClosestLocation(location);
                 Log.Info("ClosestLocation", closestName);
+                var date = "2019/01/01";//DateTime.Now.ToString("yyyy/MM/dd");
+                var city = closestName;
+
+                var tides = (from t in db.Table<PredictionItem>()
+                             where (t.City == city)
+                             && (t.Date == date)
+                             select t).ToList();
+                int count = tides.Count;
+                tidesArray = new PredictionItem[count];
+
+                //put tides from database into array for ListAdapter to use
+                for (int i = 0; i < count; i++)
+                {
+                    tidesArray[i] =
+                        tides[i];
+                }
+
+                ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray);
+
+                ListView.FastScrollEnabled = true;
             }
             catch(Exception e)
             {
