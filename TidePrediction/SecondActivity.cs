@@ -28,6 +28,8 @@ namespace TidePrediction
         PredictionItem[] tidesArray;
         const string CITY = "City";
         const string DATE = "Date";
+        string city = "";
+        string date = "";
         const string TODAY = "isToday";
         GoogleApiClient googleApiClient;
         GoogleApiAvailability googleApiAvailability;
@@ -46,8 +48,8 @@ namespace TidePrediction
 
             //get selected city and date from main activity
             Boolean today = Intent.Extras.GetBoolean(TODAY);
-            string city = Intent.Extras.GetString(CITY);
-            string date = Intent.Extras.GetString(DATE);
+            city = Intent.Extras.GetString(CITY);
+            date = Intent.Extras.GetString(DATE);
 
             string dbPath = "";
 
@@ -79,23 +81,7 @@ namespace TidePrediction
 
             else
             {
-                var tides = (from t in db.Table<PredictionItem>()
-                             where (t.City == city)
-                             && (t.Date == date)
-                             select t).ToList();
-                int count = tides.Count;
-                tidesArray = new PredictionItem[count];
-
-                //put tides from database into array for ListAdapter to use
-                for (int i = 0; i < count; i++)
-                {
-                    tidesArray[i] =
-                        tides[i];
-                }
-
-                ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray);
-
-                ListView.FastScrollEnabled = true;
+                SetListView(date, city);
             }
            
 
@@ -161,6 +147,9 @@ namespace TidePrediction
             }
 
             GetLocation(locRequest);
+
+            date = "2019/01/01";//Set a date for "today" because of limited data copied into database
+            SetListView(date, city);
             
             
         }
@@ -175,26 +164,9 @@ namespace TidePrediction
                 Log.Info("LastLocation", location.ToString());
                 CalculateClosestLocation(location);
                 Log.Info("ClosestLocation", closestName);
-                var date = "2019/01/01";//DateTime.Now.ToString("yyyy/MM/dd");
-                var city = closestName;
-
-                var tides = (from t in db.Table<PredictionItem>()
-                             where (t.City == city)
-                             && (t.Date == date)
-                             select t).ToList();
-                int count = tides.Count;
-                tidesArray = new PredictionItem[count];
-
-                //put tides from database into array for ListAdapter to use
-                for (int i = 0; i < count; i++)
-                {
-                    tidesArray[i] =
-                        tides[i];
-                }
-
-                ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray);
-
-                ListView.FastScrollEnabled = true;
+                
+                city = closestName;
+               
             }
             catch(Exception e)
             {
@@ -204,6 +176,28 @@ namespace TidePrediction
             
 
 
+        }
+
+        public void SetListView(string date, string city)
+        {
+            
+            var tides = (from t in db.Table<PredictionItem>()
+                         where (t.City == city)
+                         && (t.Date == date)
+                         select t).ToList();
+            int count = tides.Count;
+            tidesArray = new PredictionItem[count];
+
+            //put tides from database into array for ListAdapter to use
+            for (int i = 0; i < count; i++)
+            {
+                tidesArray[i] =
+                    tides[i];
+            }
+
+            ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray);
+
+            ListView.FastScrollEnabled = true;
         }
 
         public void OnConnectionSuspended(int cause)
@@ -235,6 +229,7 @@ namespace TidePrediction
         public void OnLocationChanged(Android.Locations.Location location)
         {
             Log.Info("Location has changed", location.ToString());
+            
         }
 
         void RequestLocationPermission()
