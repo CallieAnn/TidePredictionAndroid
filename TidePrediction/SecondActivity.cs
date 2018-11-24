@@ -15,9 +15,13 @@ using Android.Support.V4.Content;
 using Android;
 using Android.Support.V4.App;
 using Android.Locations;
-using System.Threading.Tasks;
 using Android.Content;
 
+/*Currently an issue copying the database to the phone.  Data is missing when querying from the android app, but when 
+ queried in the console app the data is present in the database.  I limited the number of rows inserted into the database
+ in the console app to 100 per tide location to ensure that the second table, "Locations," would be present in the android app, 
+ so only dates through the 25th of January will have tide data to show, except for the last location which did not get all the
+ data copied.*/
 namespace TidePrediction
 {
     [Activity(Label = "Second", ParentActivity = typeof(MainActivity))]
@@ -71,20 +75,17 @@ namespace TidePrediction
                 googleApiClient = new GoogleApiClient.Builder(this, this, this)
                     .AddApi(LocationServices.API).Build();
 
+                //OnConnect sets the list view for the closest location's current tides.
                 googleApiClient.Connect();
 
                 date = DateTime.Now.ToString("yyyy/MM/dd");
                 
-
-
             }
 
             else
             {
                 SetListView(date, city);
             }
-           
-
         }
 
 
@@ -107,8 +108,6 @@ namespace TidePrediction
                         closestName = l.Name;
                     }
                 }
-            
-
             }
 
             catch(Exception e)
@@ -139,7 +138,6 @@ namespace TidePrediction
             locRequest.SetFastestInterval(500);
             locRequest.SetInterval(1000);
 
-            // if (PackageManager.CheckPermission("android.permission.ACCESS_FINE_LOCATION", "TidePrediction.TidePrediction").Equals(-1))
             if(ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) != Android.Content.PM.Permission.Granted)
             {
                 // Permission is not granted
@@ -148,18 +146,19 @@ namespace TidePrediction
 
             GetLocation(locRequest);
 
-            date = "2019/01/01";//Set a date for "today" because of limited data copied into database
+            //Set List View for closest location's current day tides
+            date = "2019/01/01";//Set a fake date for "today" because of limited data copied into database
             SetListView(date, city);
             
             
         }
 
-        async void GetLocation(LocationRequest locRequest)
+        public void GetLocation(LocationRequest locRequest)
         {
             
             try
             {
-                await LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
+                LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
                 Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
                 Log.Info("LastLocation", location.ToString());
                 CalculateClosestLocation(location);
@@ -196,7 +195,7 @@ namespace TidePrediction
             }
 
             ListAdapter = new TideAdapter<PredictionItem>(this, Android.Resource.Layout.SimpleListItem1, tidesArray);
-
+            Android.Widget.Toast.MakeText(this, city, Android.Widget.ToastLength.Long).Show();
             ListView.FastScrollEnabled = true;
         }
 
@@ -234,17 +233,7 @@ namespace TidePrediction
 
         void RequestLocationPermission()
         {
-            //if (ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation))
-            //{
-            //    Snackbar.Make(ListView, Resource.String.permission_location_rationale,
-            //        Snackbar.LengthIndefinite).SetAction(Resource.String.ok, new Action<View>(delegate (View obj) {
-            //            ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.Camera }, REQUEST_CODE);
-            //        })).Show();
-            //}
-            //else
-            {
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_CODE);
-            }
+            ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, REQUEST_CODE);
         }
 
 

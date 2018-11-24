@@ -95,6 +95,7 @@ namespace TidePrediction_Console
 
             foreach (IDictionary<string, object> prediction in tideList)
             {
+                //limited because of issue getting second table copied in the Android app
                 if (tideList.IndexOf(prediction) >= 100)
                 {
                     continue;

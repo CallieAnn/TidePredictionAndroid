@@ -1,16 +1,12 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Runtime;
 using Android.Widget;
-using System.Collections.Generic;
-using Android.Views;
 using SQLite;
 using System.Linq;
 using System.IO;
 using Android.Content;
 using System;
-using System.Globalization;
 using TidePrediction_Library;
 
 
