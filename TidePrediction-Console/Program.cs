@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TidePrediction_Library;
 
 namespace TidePrediction_Console
@@ -21,6 +22,49 @@ namespace TidePrediction_Console
             string dbPath = currentDir + @"/../../../../TidePrediction/Assets/tides.db3";
             var db = new SQLiteConnection(dbPath);
 
+            AddPredictions(db);
+
+            //Add Coordinates
+            AddLocationCoordinates(db);
+            CheckForPredictionLocationTable(db);
+
+        }
+
+        private static void CheckForPredictionLocationTable(SQLiteConnection db)
+        {
+            var table = (from t in db.Table<PredictionLocation>()
+                         select t.Name).ToList();
+
+            foreach(string name in table)
+            {
+                Console.WriteLine(name);
+            }
+        }
+        private static void AddLocationCoordinates(SQLiteConnection db)
+        {
+            // Create a table
+            db.DropTable<PredictionLocation>();
+            if (db.CreateTable<PredictionLocation>() == 0)
+            {
+                // A table already exixts, delete any data it contains
+                db.DeleteAll<PredictionLocation>();
+            }
+
+            PredictionLocation florenceCoordinates = new PredictionLocation { Name = "Florence", Latitude = -124.0998, Longitude = 43.9826 };
+            PredictionLocation reedsportCoordinates = new PredictionLocation { Name = "Reedsport", Latitude = -124.0968, Longitude = 43.7023 };
+            PredictionLocation depoeBayCoordinates = new PredictionLocation { Name = "Depoe Bay", Latitude = -124.0632, Longitude = 44.8084 };
+
+            int pk = 0;
+            pk += db.Insert(florenceCoordinates);
+            pk += db.Insert(reedsportCoordinates);
+            pk += db.Insert(depoeBayCoordinates);
+
+            //check finished
+            Console.WriteLine("{0} finished", pk);
+        }
+
+        private static void AddPredictions(SQLiteConnection db)
+        {
             // Create a table
             db.DropTable<PredictionItem>();
             if (db.CreateTable<PredictionItem>() == 0)
@@ -30,10 +74,9 @@ namespace TidePrediction_Console
             }
 
             AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/9434032_annual.xml", "Florence");
-            
+
             AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/reedsport_annual.xml", "Reedsport");
             AddPredictionsToDb(db, currentDir + @"/../../../../TidePrediction/Assets/depoebay_annual.xml", "Depoe Bay");
-
         }
 
         private static void AddPredictionsToDb(SQLiteConnection db, string file, string c)

@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace TidePrediction_Library
 {
+    [Table("Predictions")]
     public class PredictionItem
     {
         [PrimaryKey, AutoIncrement]

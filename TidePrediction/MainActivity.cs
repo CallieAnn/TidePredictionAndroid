@@ -92,7 +92,6 @@ namespace TidePrediction
                 var back = new Intent(this, typeof(SecondActivity));
 
                 isToday = true;
-
                 back.PutExtra(TODAY, isToday);
                 StartActivity(back);
 

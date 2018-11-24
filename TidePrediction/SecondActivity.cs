@@ -1,9 +1,6 @@
 ﻿using Android.App;
 using Android.OS;
-using Android.Support.V7.App;
-using Android.Runtime;
 using Android.Widget;
-using System.Collections.Generic;
 using Android.Views;
 using SQLite;
 using System.Linq;
@@ -14,17 +11,18 @@ using Android.Gms.Common;
 using Android.Gms.Location;
 using Android.Gms.Common.Apis;
 using Android.Util;
-using System.Threading.Tasks;
 using Android.Support.V4.Content;
 using Android;
 using Android.Support.V4.App;
-using Android.Support.Design.Widget;
+using Android.Locations;
+using System.Threading.Tasks;
+using Android.Content;
 
 namespace TidePrediction
 {
     [Activity(Label = "Second", ParentActivity = typeof(MainActivity))]
     public class SecondActivity : ListActivity, GoogleApiClient.IConnectionCallbacks,
-        GoogleApiClient.IOnConnectionFailedListener, ILocationListener
+        GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
 
     {
         PredictionItem[] tidesArray;
@@ -33,8 +31,13 @@ namespace TidePrediction
         const string TODAY = "isToday";
         GoogleApiClient googleApiClient;
         GoogleApiAvailability googleApiAvailability;
+        SQLiteConnection db = null;
 
         const int REQUEST_CODE = 0; //request code for location permission
+
+        //used to hold info for closest tide prediction location
+        double closestDistance = -1;
+        string closestName = "";
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -47,7 +50,6 @@ namespace TidePrediction
             string date = Intent.Extras.GetString(DATE);
 
             string dbPath = "";
-            SQLiteConnection db = null;
 
             // Get the path to the database that was deployed in Assets
             dbPath = Path.Combine(
@@ -69,7 +71,10 @@ namespace TidePrediction
 
                 googleApiClient.Connect();
 
+                date = DateTime.Now.ToString("yyyy/MM/dd");
                 
+
+
             }
 
             else
@@ -94,6 +99,36 @@ namespace TidePrediction
             }
            
 
+        }
+
+
+        public void CalculateClosestLocation(Android.Locations.Location location)
+        {
+            try
+            {
+                var locations = (from l in db.Table<PredictionLocation>()
+                                           select l).ToList<PredictionLocation>();
+
+                foreach(PredictionLocation l in locations)
+                {
+                    var lon = l.Longitude;
+                    var lat = l.Latitude;
+                    Location PredLocation = new Location("Prediction") { Latitude = lat, Longitude = lon };
+                    var distance = location.DistanceTo(PredLocation);
+                    if(closestDistance == -1 || distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestName = l.Name;
+                    }
+                }
+            
+
+            }
+
+            catch(Exception e)
+            {
+                Console.WriteLine("Location Calculation Error " + e.ToString());
+            }
         }
 
         protected override void OnListItemClick(ListView l, View v, int position, long id)
@@ -126,13 +161,27 @@ namespace TidePrediction
             }
 
             GetLocation(locRequest);
+            
+            
         }
 
         async void GetLocation(LocationRequest locRequest)
         {
-            await LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
-            Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
-            Log.Info("LastLocation", location.ToString());
+            
+            try
+            {
+                await LocationServices.FusedLocationApi.RequestLocationUpdates(googleApiClient, locRequest, this);
+                Android.Locations.Location location = LocationServices.FusedLocationApi.GetLastLocation(googleApiClient);
+                Log.Info("LastLocation", location.ToString());
+                CalculateClosestLocation(location);
+                Log.Info("ClosestLocation", closestName);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Android.Widget.Toast.MakeText(this, "Please make sure location is turned on", Android.Widget.ToastLength.Short).Show();
+            }
+            
 
 
         }
